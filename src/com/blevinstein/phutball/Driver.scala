@@ -20,6 +20,8 @@ import com.jogamp.opengl.util.awt.TextRenderer
 import java.awt.Color
 import java.awt.Font
 import java.awt.Frame
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionAdapter
@@ -51,6 +53,7 @@ object Driver extends App {
   glCanvas.addGLEventListener(EventListener)
   val textRenderer = new TextRenderer(new Font("Arial", Font.PLAIN, 10))
   glCanvas.addMouseListener(MouseListener)
+  glCanvas.addKeyListener(KeyListener)
   glCanvas.addMouseMotionListener(MouseMotionListener)
 
   // setup window
@@ -203,18 +206,16 @@ object Driver extends App {
 
   object MouseListener extends MouseAdapter {
     override def mouseClicked(e : MouseEvent) {
-      val pos = getPosition(e)
-      e.getButton() match {
-        case MouseEvent.BUTTON1 => {
-          if (!cursorMove.isEmpty) {
-            board = board.after(cursorMove.get)
-          }
-        }
-        case MouseEvent.BUTTON3 => {
-          jumpMode = !jumpMode
-          cursorMove = None
-        }
+      if (!cursorMove.isEmpty) {
+        board = board.after(cursorMove.get)
       }
+    }
+  }
+
+  object KeyListener extends KeyAdapter {
+    override def keyTyped(e : KeyEvent) {
+      jumpMode = !jumpMode
+      cursorMove = None
     }
   }
 
